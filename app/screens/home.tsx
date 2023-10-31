@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Pressable,  } from 'react-native'
 import {useSelector} from 'react-redux'
 import Playlist from '../components/playlist'
 import MiniAudio from '../components/miniAudio'
@@ -11,9 +11,9 @@ export default function HomeScreen({navigation}) {
         <Playlist/>
         {playingId ? 
         
-        <TouchableOpacity onPress={() => navigation.navigate('NowPlayingScreen')}>
+        <Pressable onPress={() => navigation.navigate('NowPlayingScreen')}>
           <MiniAudio />
-        </TouchableOpacity> 
+        </Pressable> 
         : 
         null}
       </View>

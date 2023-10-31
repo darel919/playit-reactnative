@@ -88,16 +88,19 @@ const styles = StyleSheet.create({
   },
   data: {
     // width: '100%',
-    marginLeft: 30,
-    marginRight: 30,
-    marginBottom: 30
-    // backgroundColor: 'red'
+    textAlign: 'center',
+    // marginLeft: 30,
+    // marginRight: 30,
+    marginBottom: 30,
+    // backgroundColor: 'red',
+    paddingLeft: 30,
+    paddingRight: 30
   },
   titleText: {
     fontFamily: 'SF-Pro-Bold',
     fontSize: 24,
     overflow: 'hidden',
-    width: '100%',
+    // width: '100%',
   },
   radioName: {
       fontFamily: 'SF-Pro-Bold',

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Button } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable, FlatList, Button } from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 import React, { useState, useEffect } from 'react';
 import MiniAudio from '../components/miniAudio'
@@ -65,9 +65,9 @@ export default function PlaybackHistory({navigation}) {
         <Text style={styles.noData}>No recorded radio data for the current session.</Text>
         }
       
-        <TouchableOpacity style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
+        <Pressable style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
           <MiniAudio/>
-        </TouchableOpacity> 
+        </Pressable> 
 
       </View>
     )
@@ -84,9 +84,12 @@ const styles = StyleSheet.create({
     },
     textParent: {
       marginLeft: 3,
+      
     },
     text: {
       fontFamily: 'SF-Pro-Bold',
+      overflow: 'hidden',
+      width: '99%'
     },
     picker: {
       display: 'flex',

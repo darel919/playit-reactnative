@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList, Pressable } from 'react-native'
 import {useDispatch} from 'react-redux'
 import {playRadio} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -50,9 +50,9 @@ export default function Search({navigation}) {
               )}
             />: null}
 
-          <TouchableOpacity style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
+          <Pressable style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
             <MiniAudio/>
-          </TouchableOpacity> 
+          </Pressable> 
 
         </View>
     )

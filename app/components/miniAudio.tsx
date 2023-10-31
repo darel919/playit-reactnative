@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#dddddd',
         width: '95%',
+        height: 58,
         paddingTop: 7,
         paddingLeft: 7,
         paddingRight: 14,
@@ -66,14 +67,19 @@ const styles = StyleSheet.create({
     },
     svData: {
         paddingLeft: 5,
+        paddingRight: 5,
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        marginTop: -7
+        marginTop: -7,
+        width: '75%',
     },
     titleText: {
         fontFamily: 'SF-Pro-Bold',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        height: 30
+        // fontSize: 24,
     },
     radioName: {
         fontSize: 12,
