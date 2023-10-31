@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontFamily: 'SF-Pro-Bold',
         overflow: 'hidden',
-        height: 30
+        height: 27
         // fontSize: 24,
     },
     radioName: {

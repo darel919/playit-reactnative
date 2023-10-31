@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList, Pressable } from 'react-native'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {playRadio} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
 import MiniAudio from '../components/miniAudio'
 import {API_ENDPOINT} from '@env'
 
 export default function Search({navigation}) {
+    const playingId = useSelector(state=> state.radioPlaying.id);
     const [text, setText] = useState('')
     const [data, setData] = useState([])
     useEffect(() => {
@@ -22,7 +23,7 @@ export default function Search({navigation}) {
     const dispatch = useDispatch();
     function pressHandler(item) {
         dispatch(playRadio(item))
-        navigation.navigate('Home')
+        // navigation.navigate('Home')
     }
 
     return (
@@ -36,7 +37,7 @@ export default function Search({navigation}) {
               value={text}/>
             </View>
 
-            {text ? <Text>Found {data.count} radios</Text> : null}
+            {text && data.count > 0 ? <Text>Found {data.count} radios</Text> : null}
             {text ? <FlatList 
             data={data.rows}
             showsHorizontalScrollIndicator={false}
@@ -50,9 +51,11 @@ export default function Search({navigation}) {
               )}
             />: null}
 
+          {playingId ? 
           <Pressable style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
             <MiniAudio/>
           </Pressable> 
+          : null}
 
         </View>
     )

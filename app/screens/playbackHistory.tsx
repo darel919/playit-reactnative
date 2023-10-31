@@ -7,6 +7,7 @@ export default function PlaybackHistory({navigation}) {
     const [reversed, setReversed] = useState(true)
     const fetchedData = useSelector(state => state.listenedSong)
     const [data, setData] = useState([])
+    const playingId = useSelector(state=> state.radioPlaying.id);
     
     useEffect(() => {
       if (reversed) {
@@ -65,9 +66,11 @@ export default function PlaybackHistory({navigation}) {
         <Text style={styles.noData}>No recorded radio data for the current session.</Text>
         }
       
+        {playingId ? 
         <Pressable style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
           <MiniAudio/>
         </Pressable> 
+        : null }
 
       </View>
     )

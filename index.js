@@ -56,7 +56,7 @@ function App() {
 
 return (
   <Provider store={storeState}>
-    <Audio/>
+    {/* <Audio/> */}
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="HomeScreen" component={HomeTabs} options={{ headerShown: false  }}/>

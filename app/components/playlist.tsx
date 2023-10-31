@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import {useDispatch} from 'react-redux'
 import {playRadio} from '../redux/store'
 import {API_ENDPOINT} from "@env"
 
 export default function Playlist() {
   const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
 
     fetch(API_ENDPOINT)
     .then((r) => r.json())
     .then((data) => {
       setData(data)
-    })}, []) 
+      setIsLoading(false)
+    }
+    )}, []) 
   const dispatch = useDispatch();
 
   function pressHandler(item) {
@@ -21,6 +24,9 @@ export default function Playlist() {
 
     return (
         <SafeAreaView style={styles.home}>
+            {isLoading ? 
+            <ActivityIndicator size="large" style={styles.loading}></ActivityIndicator>
+            :
             <FlatList 
             data={data}
             showsHorizontalScrollIndicator={false}
@@ -33,14 +39,19 @@ export default function Playlist() {
                   </TouchableOpacity>
                 </View>
               )}
-            />
+            />}
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
   home: {
     paddingTop: 50,
-    // marginBottom: 60,
+  },
+  loading: {
+    marginTop: 100,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     fontSize: 20,

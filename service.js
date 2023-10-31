@@ -1,8 +1,10 @@
 // service.js
-import TrackPlayer, {useProgress} from 'react-native-track-player';
+import TrackPlayer, {Event, useProgress} from 'react-native-track-player';
 
 module.exports = async function() {
-  
+    TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());
+
+    TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
     // const progress = useProgress();
     
 
