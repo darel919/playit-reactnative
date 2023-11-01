@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import storeState from './app/redux/store'
 import { Provider } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons';
-import {PlaybackService} from './service'
+import {PlaybackService} from './app/components/engine/backgroundPlayer'
 
 // Components
 import TrackPlayer from 'react-native-track-player';

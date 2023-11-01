@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import {ToastAndroid} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import TrackPlayer, {useProgress, AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event, State, AudioMetadata } from 'react-native-track-player';
-import {playingDuration, playingData, updatePlayerStats, saveNowPlaying, playRadio} from '../../redux/store'
+import TrackPlayer, {AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event } from 'react-native-track-player';
+import {playingData, updatePlayerStats, saveNowPlaying, playRadio} from '../../redux/store'
 import API from './api'
 
 async function ClearPlayer() {
@@ -41,14 +41,9 @@ export default function AudioPlayer() {
     // Initialize player for first start
     async function PlayerInit() {
         await TrackPlayer.setupPlayer()
-    }
-    // Initialize queue for player
-    async function PlayerQueueInit(lib) {
-        setSetup(true)
-        TrackPlayer.updateOptions({
+        await TrackPlayer.updateOptions({
             android: {
-                // This is the default behavior
-                appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback,
+                appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
                 capabilities: [
                     Capability.Play,
                     Capability.Pause,
@@ -70,6 +65,28 @@ export default function AudioPlayer() {
                   ],
             },
         });
+
+        // TrackPlayer.updateOptions({
+        //     capabilities: [
+        //       TrackPlayer.CAPABILITY_PLAY,
+        //       TrackPlayer.CAPABILITY_PAUSE,
+        //       TrackPlayer.CAPABILITY_STOP,
+        //       TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+        //       TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS
+        //     ],
+        //     compactCapabilities: [
+        //       TrackPlayer.CAPABILITY_PLAY,
+        //       TrackPlayer.CAPABILITY_PAUSE,
+        //       TrackPlayer.CAPABILITY_STOP,
+        //       TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+        //       TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS
+        //     ]
+        //   });
+
+    }
+    // Initialize queue for player
+    async function PlayerQueueInit(lib) {
+        setSetup(true)
         let localArray = []
         await lib.forEach(item => {
             localArray.push({
