@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import {useSelector} from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons';
+import {stylesTheme} from '../components/styling/userScheme'
 
 export default function MiniAudio() {
     const img = useSelector(state=> state.radioPlaying.img);
@@ -9,32 +10,33 @@ export default function MiniAudio() {
     const elapsed = useSelector(state => state.playerElapsed);
     const APIready = useSelector(state => state.infoFromAPI);
     const playerStatus = useSelector (state=>state.playerStatus);
+    const theme = useSelector(state => state.mode);
     
         return (
-            <View style={styles.smallView}>
+            <View style={[styles.smallView, theme === 'dark' ? stylesTheme().taskbarDark : stylesTheme().taskbarWhite]}>
                 {APIready.title ? 
-                <View style={styles.parent}>
+                <View style={[styles.parent]}>
                     <Image source={{uri: APIready.img}} style={styles.image}/>
                     <View style={styles.svData}>
-                        <Text style={styles.titleText}>{APIready.title}</Text>
-                        <Text style={styles.radioName}>{title}</Text>
+                        <Text style={[styles.titleText, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{APIready.title}</Text>
+                        <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{title}</Text>
                     </View>
                 </View> 
                 : 
                 <View style={styles.parent}>
                     <Image source={{uri: img}} style={styles.image}/>
                     <View style={styles.svData}>
-                        <Text style={styles.titleText}>{title}</Text>
-                        {elapsed === '00:00:00' ? <Text style={styles.radioName}>Loading...</Text> : <Text style={styles.radioName}>{elapsed}</Text>}
+                        <Text style={[styles.titleText, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{title}</Text>
+                        {elapsed === '00:00:00' ? <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark ]}>Loading...</Text> : <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{elapsed}</Text>}
                     </View>
                 </View>
                 }
 
                 {playerStatus === 'playing' 
                 ? 
-                <Icon name="pause" size={25}/> 
+                <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="pause" size={25}/> 
                 : 
-                <Icon name="play" size={25}/>
+                <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="play" size={25}/>
                 }
             </View>
         )
@@ -56,7 +58,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#dddddd',
         width: '95%',
         height: 58,
         paddingTop: 7,

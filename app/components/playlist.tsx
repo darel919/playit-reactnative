@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {playRadio} from '../redux/store'
 import {API_ENDPOINT} from "@env"
+import {stylesTheme} from '../components/styling/userScheme'
 
 export default function Playlist() {
   const [data, setData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const theme = useSelector(state => state.mode);
   useEffect(() => {
 
     fetch(API_ENDPOINT)
@@ -35,7 +37,7 @@ export default function Playlist() {
                 <View>
                   <TouchableOpacity style={styles.picker} onPress={() => pressHandler(item)}>
                     <Image source={{uri: item.img}} style={styles.image}/>
-                    <Text style={styles.text}>{item.title}</Text>
+                    <Text style={[styles.text, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{item.title}</Text>
                   </TouchableOpacity>
                 </View>
               )}

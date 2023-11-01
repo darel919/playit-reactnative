@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     text: {
       fontFamily: 'SF-Pro-Bold',
       overflow: 'hidden',
-      width: '99%'
+      // width: '99%'
     },
     picker: {
       display: 'flex',

@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-n
 import {useSelector, useDispatch} from 'react-redux'
 import {remoteCmd} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
+import {stylesTheme} from '../components/styling/userScheme'
 
 export default function NowPlaying({navigation}) {
 
@@ -12,7 +13,7 @@ export default function NowPlaying({navigation}) {
   const title = useSelector(state=> state.infoFromAPI.title) ;
   const elapsed = useSelector(state => state.playerElapsed);
   const playerStatus = useSelector (state=>state.playerStatus);
-
+  const theme = useSelector(state => state.mode);
   const dispatch = useDispatch();
 
   function pressHandler(func: String) {
@@ -20,7 +21,7 @@ export default function NowPlaying({navigation}) {
   }
 
     return (
-      <View style={styles.parent}>
+      <View style={[styles.parent, theme === 'dark' ? stylesTheme().userDark : stylesTheme().userWhite]}>
         
         {/* Now Playing Album Art */}
         <View style={styles.page}>
@@ -32,9 +33,9 @@ export default function NowPlaying({navigation}) {
 
           {/* Now Playing Information */}
           <View style={styles.data}>
-            {title ? <Text style={styles.titleText}>{title}</Text> : <Text style={styles.radioNameOnly}>{radio}</Text>}
-            {title ? <Text style={styles.radioName}>{radio}</Text> : null}
-            {elapsed === '00:00:00' ? <Text style={styles.elapsed}>Loading...</Text> : <Text style={styles.elapsed}>{elapsed}</Text>}
+            {title ? <Text style={[styles.titleText, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{title}</Text> : <Text style={[styles.radioNameOnly]}>{radio}</Text>}
+            {title ? <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{radio}</Text> : null}
+            {elapsed === '00:00:00' ? <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>Loading...</Text> : <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{elapsed}</Text>}
           </View>
 
           {/* Controls */}
@@ -42,17 +43,17 @@ export default function NowPlaying({navigation}) {
 
             {/* Playback History */}
             <TouchableOpacity onPress={() => navigation.navigate('PlaybackHistoryScreen')}>
-              <Icon name="receipt-outline" size={30}></Icon>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="receipt-outline" size={30}></Icon>
             </TouchableOpacity>
 
             {/* Play/Pause Controls */}
             {playerStatus === 'playing' ? 
             <TouchableOpacity onPress={() => pressHandler('pause')}>
-              <Icon name="pause" size={30}></Icon>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="pause" size={30}></Icon>
             </TouchableOpacity>
             : 
             <TouchableOpacity onPress={() => pressHandler('play')}>
-              <Icon name="play" size={30}></Icon>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="play" size={30}></Icon>
             </TouchableOpacity>
             }
           </View>
@@ -80,19 +81,12 @@ const styles = StyleSheet.create({
   },
   page: {
     display: 'flex',
-    // flexDirection: 'column',
     alignItems: 'center',
-    // justifyContent: 'space-around',
     width: '100%',
-    // height: '100%',
   },
   data: {
-    // width: '100%',
     textAlign: 'center',
-    // marginLeft: 30,
-    // marginRight: 30,
     marginBottom: 30,
-    // backgroundColor: 'red',
     paddingLeft: 30,
     paddingRight: 30
   },
@@ -100,15 +94,13 @@ const styles = StyleSheet.create({
     fontFamily: 'SF-Pro-Bold',
     fontSize: 24,
     overflow: 'hidden',
-    // width: '100%',
+    
   },
   radioName: {
       fontFamily: 'SF-Pro-Bold',
       fontSize: 17,
       width: '100%',
       textAlign: 'left',
-      // marginTop: -10,
-      // marginBottom: 10
   },
   radioNameOnly: {
     fontFamily: 'SF-Pro-Bold',
@@ -118,13 +110,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10
 },
   elapsed: {
-    // fontWeight: 'bold',
     fontFamily: 'SF-Pro-Bold',
     fontSize: 15
 },
   image: {
-      // width: '80%',
-      // height: 300,
 
       width: 270,
       height: 270,
