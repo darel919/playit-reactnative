@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList, Pressable } from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import {playRadio} from '../redux/store'
+import {requestId} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
 import MiniAudio from '../components/miniAudio'
 import {API_ENDPOINT} from '@env'
@@ -24,8 +24,7 @@ export default function Search({navigation}) {
     
     const dispatch = useDispatch();
     function pressHandler(item) {
-        dispatch(playRadio(item))
-        // navigation.navigate('Home')
+      dispatch(requestId(item.id))
     }
 
     return (
