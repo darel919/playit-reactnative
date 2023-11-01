@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {stylesTheme} from '../components/styling/userScheme'
 
 export default function MiniAudio() {
-    const img = useSelector(state=> state.radioPlaying.img);
+    const img = useSelector(state=> state.radioPlaying.artwork);
     const title = useSelector(state=> state.radioPlaying.title);
     const elapsed = useSelector(state => state.playerElapsed);
     const APIready = useSelector(state => state.infoFromAPI);

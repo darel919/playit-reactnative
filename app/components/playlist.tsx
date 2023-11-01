@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import {playRadio} from '../redux/store'
+import {requestId, fetchedRadioLibrary} from '../redux/store'
 import {API_ENDPOINT} from "@env"
 import {stylesTheme} from '../components/styling/userScheme'
 
@@ -16,12 +16,13 @@ export default function Playlist() {
     .then((data) => {
       setData(data)
       setIsLoading(false)
+      dispatch(fetchedRadioLibrary(data))
     }
     )}, []) 
   const dispatch = useDispatch();
-
+  
   function pressHandler(item) {
-    dispatch(playRadio(item))
+    dispatch(requestId(item.id))
   }
 
     return (

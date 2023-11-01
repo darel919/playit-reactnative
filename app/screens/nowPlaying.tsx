@@ -8,7 +8,7 @@ import {stylesTheme} from '../components/styling/userScheme'
 export default function NowPlaying({navigation}) {
 
   const AlbumArt = useSelector(state=> state.infoFromAPI.img);
-  const radioArt = useSelector(state=> state.radioPlaying.img);
+  const radioArt = useSelector(state=> state.radioPlaying.artwork);
   const radio = useSelector(state=> state.radioPlaying.title);
   const title = useSelector(state=> state.infoFromAPI.title) ;
   const elapsed = useSelector(state => state.playerElapsed);

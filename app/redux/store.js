@@ -1,6 +1,8 @@
 import {legacy_createStore as createStore} from 'redux'
 
 const CHANGE_URL = 'CHANGE_URL'
+const REQUEST_ID = 'REQUEST_ID'
+const FETCHED_LIBRARY = 'FETCHED_LIBRARY'
 const UPDATE_ELAPSED = 'UPDATE_ELAPSED'
 const UPDATE_API_DATA = 'UPDATE_API_DATA'
 const PLAYER_STATUS = 'PLAYER_STATUS'
@@ -14,6 +16,8 @@ const initData = {
 
     radioPlaying: [],
 
+    radioLibrary: [],
+
     audioCapability: [],
     currentRadioId: 0,
     playerElapsed: '00:00:00',
@@ -22,6 +26,14 @@ const initData = {
     listenedSong: [],
     audioCmd: ''
 }
+export const fetchedRadioLibrary = (radioLibrary) => ({
+    type: FETCHED_LIBRARY,
+    data: radioLibrary
+})
+export const requestId = (currentRadioId) => ({
+    type: REQUEST_ID,
+    data: currentRadioId
+})
 export const updateCapability = (audioCapability) => ({
     type: GET_SOURCE_CAPABILITY,
     data: audioCapability
@@ -59,8 +71,11 @@ export const reducer = (state = initData, action) => {
     switch(action.type) {
         case CHANGE_URL:
             state.infoFromAPI = []
-            state.currentRadioId = action.data.id
             return {...state, radioPlaying: action.data}
+        case FETCHED_LIBRARY: 
+            return {...state, radioLibrary: action.data}
+        case REQUEST_ID: 
+            return {...state, currentRadioId: action.data}
         case PLAYER_STATUS:
             return {...state, playerStatus: action.data}
         case UPDATE_ELAPSED:
