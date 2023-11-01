@@ -41,7 +41,7 @@ export default function Search({navigation}) {
               />
             </View>
 
-            {text && data.count > 0 ? <Text>Found {data.count} radios</Text> : null}
+            {text && data.count > 0 ? <Text style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark}>Found {data.count} radios</Text> : null}
             {text ? <FlatList 
             data={data.rows}
             showsHorizontalScrollIndicator={false}
@@ -49,7 +49,7 @@ export default function Search({navigation}) {
                 <View>
                   <TouchableOpacity style={styles.picker} onPress={() => pressHandler(item)}>
                     <Image source={{uri: item.img}} style={styles.image}/>
-                    <Text style={styles.text}>{item.title}</Text>
+                    <Text style={[styles.text, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{item.title}</Text>
                   </TouchableOpacity>
                 </View>
               )}

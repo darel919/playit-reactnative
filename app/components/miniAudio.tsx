@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     },
     smallView: {
         margin: 10,
+        marginBottom: 8,
         bottom: 0,
         left:0,
         right:0,
@@ -60,10 +61,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         height: 58,
-        paddingTop: 7,
+        // paddingTop: 7,
         paddingLeft: 7,
         paddingRight: 14,
-        paddingBottom: 7,
+        // paddingBottom: 8,
         borderRadius: 10
     },
     svData: {

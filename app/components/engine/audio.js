@@ -29,21 +29,17 @@ async function Player([src, img, title, id]) {
             capabilities: [
                 Capability.Play,
                 Capability.Pause,
-                // Capability.SkipToNext,
-                // Capability.SkipToPrevious,
+                Capability.SkipToNext,
+                Capability.SkipToPrevious,
                 Capability.Stop,
               ],
               compactCapabilities: [
                 Capability.Play,
                 Capability.Pause,
-                // Capability.SkipToNext,
-                // Capability.SkipToPrevious,
               ],
               notificationCapabilities: [
                 Capability.Play,
                 Capability.Pause,
-                // Capability.SkipToNext,
-                // Capability.SkipToPrevious,
               ],
         },
     });

@@ -72,7 +72,6 @@ export const reducer = (state = initData, action) => {
         case AUDIO_CTRL:
             return {...state, audioCmd: action.data}
         case CHANGE_COLOR_SCHEME:
-            console.log(action.data)
             return {...state, mode: action.data}
         case GET_SOURCE_CAPABILITY: 
             return {...state, audioCapability: action.data}

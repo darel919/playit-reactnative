@@ -1,18 +1,18 @@
 // Imported components
-import {AppRegistry, Button, useColorScheme, StyleSheet} from 'react-native';
+import {AppRegistry, useColorScheme, StyleSheet, Text} from 'react-native';
 import {name as appName} from './app.json';
 import * as React from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import storeState from './app/redux/store'
 import { Provider } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons';
+import {PlaybackService} from './service'
 
 // Components
 import TrackPlayer from 'react-native-track-player';
-import Audio from './app/components/engine/audio'
-import rNR from './app/components/engine/radioNameReturn'
 
 // Pages
 import Home from './app/screens/home'
@@ -24,6 +24,34 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeTabs() {
+  const insets = useSafeAreaInsets();
+  function tabByUser() {
+    const scheme = useColorScheme()
+    if (scheme === 'dark') {
+      return styles.tabDark
+    }
+    else {
+      return styles.tabWhite
+    }
+  }
+  const styles = StyleSheet.create({
+    tabDark: {
+      borderWidth: 0,
+      // height: 50,
+      marginTop: -9,
+      backgroundColor: '#000',
+      paddingTop: 9,
+      paddingBottom: 9,
+    },
+    tabWhite: {
+      borderWidth: 0,
+      // height: 50,
+      marginTop: -9,
+      backgroundColor: '#fff',
+      paddingTop: 9,
+      paddingBottom: insets.bottom,
+    }
+  })
   return (
     
     <Tab.Navigator
@@ -52,47 +80,41 @@ function HomeTabs() {
        
   )
 }
-
-function tabByUser() {
-  const scheme = useColorScheme()
-  if (scheme === 'dark') {
-    return styles.tabDark
-  }
-  else {
-    return styles.tabWhite
-  }
+function AppStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="HomeScreen" component={HomeTabs} options={{ headerShown: false  }}/>
+      <Stack.Screen name="NowPlayingScreen" component={NowPlaying} options={{headerTransparent: true, title: ''}}/>
+      <Stack.Screen name="PlaybackHistoryScreen" component={PlaybackHistory} options={{title: 'Playback History'}}/>
+    </Stack.Navigator>
+  )
 }
-const styles = StyleSheet.create({
-  tabDark: {
-    borderWidth: 0,
-    marginTop: -1,
-    backgroundColor: '#000'
-  },
-  tabWhite: {
-    borderWidth: 0,
-    marginTop: -1,
-    backgroundColor: '#fff'
-  }
-})
 // RoutedApp
 function App() {
 const scheme = useColorScheme()
+const linking = {
+  prefixes: [
+    'playit://', 'trackplayer://'
+  ],
+  config: {
+    screens: {
+      NowPlayingScreen: 'notification.click',
+    },
+  },
+};
+
 return (
   <Provider store={storeState}>
-      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack.Navigator>
-          <Stack.Screen name="HomeScreen" component={HomeTabs} options={{ headerShown: false  }}/>
-          <Stack.Screen name="NowPlayingScreen" component={NowPlaying} options={{headerTransparent: true, title: ''}}/>
-          <Stack.Screen name="PlaybackHistoryScreen" component={PlaybackHistory} options={{title: 'Playback History'}}/>
-        </Stack.Navigator>
-        
+    <SafeAreaProvider>
+      <NavigationContainer linking={linking} theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AppStack/>
       </NavigationContainer>
+    </SafeAreaProvider>
   </Provider>
   );
 }
-
 // Register TrackPlayer as Background Service
-TrackPlayer.registerPlaybackService(() => require('./service'));
+TrackPlayer.registerPlaybackService(() => PlaybackService);
 // Register App
 AppRegistry.registerComponent(appName, () => App);
 

@@ -25,6 +25,7 @@ ios/.xcode.env.local
 # Android/IntelliJ
 #
 build/
+build apk now.bat
 .idea
 .gradle
 local.properties

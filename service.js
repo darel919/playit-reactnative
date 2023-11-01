@@ -1,6 +1,6 @@
 // service.js
 import TrackPlayer, {Event} from 'react-native-track-player';
-module.exports = async function() {
+export async function PlaybackService () {
     TrackPlayer.addEventListener(Event.RemotePause, () => {
         console.log('Event.RemotePause');
         TrackPlayer.pause();
