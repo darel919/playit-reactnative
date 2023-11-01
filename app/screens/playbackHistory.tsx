@@ -66,7 +66,7 @@ export default function PlaybackHistory({navigation}) {
         <Text style={styles.noData}>No recorded radio data for the current session.</Text>
         }
       
-        {playingId ? 
+        {playingId > 0? 
         <Pressable style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
           <MiniAudio/>
         </Pressable> 

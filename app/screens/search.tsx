@@ -5,8 +5,10 @@ import {playRadio} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
 import MiniAudio from '../components/miniAudio'
 import {API_ENDPOINT} from '@env'
+import {stylesTheme} from '../components/styling/userScheme'
 
 export default function Search({navigation}) {
+    const theme = useSelector(state => state.mode);
     const playingId = useSelector(state=> state.radioPlaying.id);
     const [text, setText] = useState('')
     const [data, setData] = useState([])
@@ -28,13 +30,15 @@ export default function Search({navigation}) {
 
     return (
         <View style={styles.parentView}>
-            <View style={styles.textInput}>
+            <View style={[styles.textInput, theme === 'dark' ? stylesTheme().taskbarDark : stylesTheme().inputTextDark]}>
               <Icon name="search" size={20}/>
               <TextInput
               placeholder="Search for Radios"
               autoFocus
               onChangeText={text => setText(text)}
-              value={text}/>
+              value={text}
+              style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark}
+              />
             </View>
 
             {text && data.count > 0 ? <Text>Found {data.count} radios</Text> : null}
@@ -51,7 +55,7 @@ export default function Search({navigation}) {
               )}
             />: null}
 
-          {playingId ? 
+          {playingId > 0 ? 
           <Pressable style={styles.maudio} onPress={() => navigation.navigate('NowPlayingScreen')}>
             <MiniAudio/>
           </Pressable> 

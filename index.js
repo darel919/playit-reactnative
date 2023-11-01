@@ -1,8 +1,8 @@
 // Imported components
-import {AppRegistry, Button} from 'react-native';
+import {AppRegistry, Button, useColorScheme, StyleSheet} from 'react-native';
 import {name as appName} from './app.json';
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import storeState from './app/redux/store'
@@ -42,6 +42,7 @@ function HomeTabs() {
         },
         tabBarActiveTintColor: 'red',
         tabBarInactiveTintColor: 'gray',
+        tabBarItemStyle: tabByUser()
       })}>
 
         <Tab.Screen name="Home" component={Home} options={({headerLargeTitle: true, headerTransparent: true})}/>
@@ -51,16 +52,37 @@ function HomeTabs() {
        
   )
 }
+
+function tabByUser() {
+  const scheme = useColorScheme()
+  if (scheme === 'dark') {
+    return styles.tabDark
+  }
+  else {
+    return styles.tabWhite
+  }
+}
+const styles = StyleSheet.create({
+  tabDark: {
+    borderWidth: 0,
+    marginTop: -1,
+    backgroundColor: '#000'
+  },
+  tabWhite: {
+    borderWidth: 0,
+    marginTop: -1,
+    backgroundColor: '#fff'
+  }
+})
 // RoutedApp
 function App() {
-
+const scheme = useColorScheme()
 return (
   <Provider store={storeState}>
-    {/* <Audio/> */}
-      <NavigationContainer>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack.Navigator>
           <Stack.Screen name="HomeScreen" component={HomeTabs} options={{ headerShown: false  }}/>
-          <Stack.Screen name="NowPlayingScreen" component={NowPlaying} options={{headerShown: false}}/>
+          <Stack.Screen name="NowPlayingScreen" component={NowPlaying} options={{headerTransparent: true, title: ''}}/>
           <Stack.Screen name="PlaybackHistoryScreen" component={PlaybackHistory} options={{title: 'Playback History'}}/>
         </Stack.Navigator>
         

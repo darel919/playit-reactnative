@@ -6,9 +6,15 @@ const UPDATE_API_DATA = 'UPDATE_API_DATA'
 const PLAYER_STATUS = 'PLAYER_STATUS'
 const AUDIO_CTRL = 'AUDIO_CTRL'
 const SAVE_NOWPLAYING = 'SAVE_NOWPLAYING'
+const CHANGE_COLOR_SCHEME = 'CHANGE_COLOR_SCHEME'
+const GET_SOURCE_CAPABILITY = 'GET_SOURCE_CAPABILITY'
 
 const initData = {
+    mode: 'dark',
+
     radioPlaying: [],
+
+    audioCapability: [],
     currentRadioId: 0,
     playerElapsed: '00:00:00',
     playerStatus: 'ready',
@@ -16,9 +22,17 @@ const initData = {
     listenedSong: [],
     audioCmd: ''
 }
+export const updateCapability = (audioCapability) => ({
+    type: GET_SOURCE_CAPABILITY,
+    data: audioCapability
+})
 export const playRadio = (radioPlaying) => ({
     type: CHANGE_URL,
     data: radioPlaying,
+})
+export const changeColorScheme = (mode) => ({
+    type: CHANGE_COLOR_SCHEME,
+    data: mode,
 })
 export const updatePlayerStats = (playerStatus) => ({
     type: PLAYER_STATUS,
@@ -57,6 +71,11 @@ export const reducer = (state = initData, action) => {
             return {...state, listenedSong: action.data}
         case AUDIO_CTRL:
             return {...state, audioCmd: action.data}
+        case CHANGE_COLOR_SCHEME:
+            console.log(action.data)
+            return {...state, mode: action.data}
+        case GET_SOURCE_CAPABILITY: 
+            return {...state, audioCapability: action.data}
         default: return state;
     }
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import {ToastAndroid} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import TrackPlayer, {useProgress, AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event, State } from 'react-native-track-player';
-import {playingDuration, playingData, updatePlayerStats, saveNowPlaying} from '../../redux/store'
+import TrackPlayer, {useProgress, AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event, State, AudioMetadata } from 'react-native-track-player';
+import {playingDuration, playingData, updatePlayerStats, saveNowPlaying, playRadio} from '../../redux/store'
 import API from './api'
 
 let globalId;
@@ -9,7 +10,7 @@ let globalId;
 async function Player([src, img, title, id]) {
     await TrackPlayer.reset();
 
-    console.log(src, img, title, id)
+    // console.log(src, img, title, id)
     const radioTrack = {
         id: id,
         url: src, // Load media from the file system
@@ -30,7 +31,7 @@ async function Player([src, img, title, id]) {
                 Capability.Pause,
                 // Capability.SkipToNext,
                 // Capability.SkipToPrevious,
-                // Capability.Stop,
+                Capability.Stop,
               ],
               compactCapabilities: [
                 Capability.Play,
@@ -48,15 +49,9 @@ async function Player([src, img, title, id]) {
     });
     globalId = id
 }
-
-function DurationViewer() {
-    const progress = useProgress().position;
-    if(progress === 0) {
-        return TimeFormatter(0)
-    } else {
-        let FormattedTime = TimeFormatter(progress);
-        return FormattedTime
-    }
+async function ClearPlayer() {
+    await TrackPlayer.reset();
+    globalId = 0
 }
 
 function TimeFormatter(progress) {
@@ -89,7 +84,8 @@ export default function AudioPlayer() {
         if(id > 0) {
             // TrackPlayer.setupPlayer()
             Player([src, img, title, id]);  
-            
+        } else if (id === 0) {
+            ClearPlayer()
         } else {
             TrackPlayer.setupPlayer()
         }
@@ -105,21 +101,30 @@ export default function AudioPlayer() {
       ];
     useTrackPlayerEvents(events, (event) => {
         if (event.type === Event.PlaybackError) {
-          console.warn('An error occured while playing the current track.');
+          ToastAndroid.show('An error occured while playing '+title, ToastAndroid.SHORT);
+          ClearPlayer()
+          dispatch(playRadio([]))
         }
         if (event.type === Event.PlaybackState) {
           setPlayerState(event.state);
           console.log(playerState)
+          if(playerState === 'playing') {
+          }
+        }
+        if (event.type === Event.MetadataCommonReceived) {
+            console.log(Event.MetadataCommonReceived)
         }
       });
       
     // Update Play Duration
-    dispatch(playingDuration(DurationViewer()))
-
+    dispatch(playingDuration(TimeFormatter(useProgress(1000).position)))
+    
     // Calls timer on audio.js start
     useEffect(() => {
+        
         const timer = setInterval(async () => {
             dispatch(playingData(await API(globalId)))
+            // console.log(AudioMetadata)
         }, 12500)
 
         return () => clearInterval(timer)
@@ -163,4 +168,5 @@ export default function AudioPlayer() {
             dispatch(updatePlayerStats('playing'))
         }
     }
+    return null
 }
