@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import TrackPlayer, {} from 'react-native-track-player';
+import { remoteCmd } from '../../redux/store'; 
 
 export async function remoteFunction() {
     TrackPlayer.addEventListener("remote-play", () => {
@@ -21,10 +22,16 @@ export async function remoteFunction() {
 }
 export default function remoteProcess() {
     const cmd = useSelector(state => state.audioCmd);
+    const dispatch = useDispatch()
 
     // Calls AudioController every Remote Command received
     useEffect(() => {
-        audioController()
+        if(cmd === '') {
+        } else {
+            audioController()
+            dispatch(remoteCmd(''))
+        }
+        
     }, [cmd])
 
     async function audioController() {
@@ -33,10 +40,8 @@ export default function remoteProcess() {
         } else if(cmd === 'pause') {
             await TrackPlayer.pause()
         } else if(cmd === 'prev') {
-            console.log('prev!')
             await TrackPlayer.skipToPrevious()
         } else if(cmd === 'next') {
-            console.log('next!')
             await TrackPlayer.skipToNext()
         } else if(cmd === 'shuffle') {
             console.log("Future release!")

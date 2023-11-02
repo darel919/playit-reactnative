@@ -2,19 +2,19 @@ import {StyleSheet} from 'react-native'
 
 export const stylesTheme = () => StyleSheet.create({
     userWhite: {
-      backgroundColor: 'white',
+      backgroundColor: '#eee',
     },
     userDark: {
-      backgroundColor: 'black',
+      backgroundColor: '#000',
     },
     textDark: {
-      color: 'gray'
+      color: '#555'
     },
     textWhite: {
       color: 'white'
     },
     taskbarWhite: {
-      backgroundColor: '#dddddd',
+      backgroundColor: '#ddd',
     },
     taskbarDark: {
       backgroundColor: '#222',

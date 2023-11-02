@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {ToastAndroid} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import TrackPlayer, {AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event } from 'react-native-track-player';
+import TrackPlayer, {AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event, RepeatMode } from 'react-native-track-player';
 import {playingData, updatePlayerStats, saveNowPlaying, playRadio} from '../../redux/store'
 import API from './api'
 
@@ -74,8 +74,9 @@ export default function AudioService() {
             })
           });
         await TrackPlayer.add(localArray)
+        await TrackPlayer.setRepeatMode(2)
         setSetup(true)
-        
+               
     }
     // Run everytime user request a radio
     async function Player(rID) {
@@ -95,7 +96,6 @@ export default function AudioService() {
     useTrackPlayerEvents(events, (event) => {
         if (event.type === Event.PlaybackError) {
             ToastAndroid.show('An error occured while playing '+title, ToastAndroid.SHORT);
-            // ClearPlayer()
             dispatch(playRadio([]))
         }
         if (event.type === Event.PlaybackState) {
@@ -106,20 +106,19 @@ export default function AudioService() {
             dispatch(playRadio(event.track)) 
         }
         if (event.type === Event.MetadataCommonReceived) {
-            console.log(Event.MetadataCommonReceived)
+            // console.log(Event.MetadataCommonReceived)
         }
     });  
 
     // Function on every player event change
     useEffect(() => {
-        if(playerState === 'playing' && id) {
-            const timer = setInterval(async () => {
+        const timer = setInterval(async () => {
+            if(playerState === 'playing' && id) {
                 dispatch(playingData(await API(id)))
-            }, 12500)
-
-            return () => clearInterval(timer)
-        }
-    }, [radioPlaying]) 
+            }
+        }, 12500)
+        return () => clearInterval(timer)
+    }, [playerState || id]) 
 
     // Function on API Changes
     const [nowPlayingHistory, setNowPlayingHistory] = useState([]);

@@ -20,8 +20,6 @@ export default function HomeScreen({navigation}) {
     <View style={theme === 'dark' ? stylesTheme().userDark : stylesTheme().userWhite}>
       <Playlist/>
       <UserTheme/>
-      {/* <Audio/> */}
-      {/* <RemoteProcessor/> */}
       {playerState === 'playing' ? <AudioElapsed/> : null}
 
       {playingId > 0? 

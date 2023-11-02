@@ -31,8 +31,7 @@ export default function PlaybackHistory({navigation}) {
     
     const dispatch = useDispatch();
     function pressHandler(item) {
-        // dispatch(playRadio(item))
-        // navigation.navigate('Home')
+
     }
 
     function reverseOrder() {
@@ -92,7 +91,6 @@ const styles = StyleSheet.create({
     text: {
       fontFamily: 'SF-Pro-Bold',
       overflow: 'hidden',
-      // width: '99%'
     },
     picker: {
       display: 'flex',

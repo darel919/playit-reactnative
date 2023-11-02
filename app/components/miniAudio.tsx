@@ -64,10 +64,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         height: 58,
-        // paddingTop: 7,
         paddingLeft: 7,
         paddingRight: 14,
-        // paddingBottom: 8,
         borderRadius: 10
     },
     svData: {
@@ -84,7 +82,6 @@ const styles = StyleSheet.create({
         fontFamily: 'SF-Pro-Bold',
         overflow: 'hidden',
         height: 27
-        // fontSize: 24,
     },
     radioName: {
         fontSize: 12,
