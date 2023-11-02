@@ -9,7 +9,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import storeState from './app/redux/store'
 import { Provider } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons';
-import {PlaybackService} from './app/components/engine/backgroundPlayer'
+import RemoteProcess, {remoteFunction} from './app/components/engine/audioRemoteProcessor'
+import Audio from './app/components/engine/audio'
 
 // Components
 import TrackPlayer from 'react-native-track-player';
@@ -81,6 +82,7 @@ function HomeTabs() {
   )
 }
 function AppStack() {
+  
   return (
     <Stack.Navigator>
       <Stack.Screen name="HomeScreen" component={HomeTabs} options={{ headerShown: false  }}/>
@@ -91,6 +93,7 @@ function AppStack() {
 }
 // RoutedApp
 function App() {
+  
 const scheme = useColorScheme()
 const linking = {
   prefixes: [
@@ -105,6 +108,8 @@ const linking = {
 
 return (
   <Provider store={storeState}>
+    <RemoteProcess/>
+    <Audio/>
     <SafeAreaProvider>
       <NavigationContainer linking={linking} theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <AppStack/>
@@ -114,7 +119,8 @@ return (
   );
 }
 // Register TrackPlayer as Background Service
-TrackPlayer.registerPlaybackService(() => PlaybackService);
+TrackPlayer.registerPlaybackService(() => remoteFunction);
+// TrackPlayer.registerPlaybackService(() => AudioService);
 // Register App
 AppRegistry.registerComponent(appName, () => App);
 

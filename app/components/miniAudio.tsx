@@ -27,7 +27,10 @@ export default function MiniAudio() {
                     <Image source={{uri: img}} style={styles.image}/>
                     <View style={styles.svData}>
                         <Text style={[styles.titleText, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{title}</Text>
-                        {elapsed === '00:00:00' ? <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark ]}>Loading...</Text> : <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{elapsed}</Text>}
+                        {elapsed === '00:00:00' && playerStatus === 'ready' ? 
+                        null
+                        : 
+                        <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{elapsed}</Text>}
                     </View>
                 </View>
                 }

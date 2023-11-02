@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import {remoteCmd} from '../redux/store'
@@ -20,6 +20,12 @@ export default function NowPlaying({navigation}) {
     dispatch(remoteCmd(func))
   }
 
+  useEffect(()=> {
+    if(!radioArt) {
+      navigation.navigate('Home')
+    }
+  }, [radioArt])
+
     return (
       <View style={[styles.parent, theme === 'dark' ? stylesTheme().userDark : stylesTheme().userWhite]}>
         
@@ -35,7 +41,19 @@ export default function NowPlaying({navigation}) {
           <View style={styles.data}>
             {title ? <Text style={[styles.titleText, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{title}</Text> : <Text style={[styles.radioNameOnly]}>{radio}</Text>}
             {title ? <Text style={[styles.radioName, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{radio}</Text> : null}
-            {elapsed === '00:00:00' ? <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>Loading...</Text> : <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{elapsed}</Text>}
+            {elapsed === '00:00:00' 
+              ? 
+              <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>Loading...</Text> 
+              : 
+              <View>
+                {playerStatus === 'playing' 
+                  ? 
+                  <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{elapsed}</Text> 
+                  : 
+                  <Text style={[styles.elapsed, theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark]}>{playerStatus}</Text>
+                }
+              </View>
+              }
           </View>
 
           {/* Controls */}
@@ -46,6 +64,9 @@ export default function NowPlaying({navigation}) {
               <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="receipt-outline" size={30}></Icon>
             </TouchableOpacity>
 
+            <TouchableOpacity onPress={() => pressHandler('prev')}>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="play-skip-back-outline" size={30}></Icon>
+            </TouchableOpacity>
             {/* Play/Pause Controls */}
             {playerStatus === 'playing' ? 
             <TouchableOpacity onPress={() => pressHandler('pause')}>
@@ -56,6 +77,12 @@ export default function NowPlaying({navigation}) {
               <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="play" size={30}></Icon>
             </TouchableOpacity>
             }
+            <TouchableOpacity onPress={() => pressHandler('next')}>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="play-skip-forward-outline" size={30}></Icon>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => pressHandler('shuffle')}>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="shuffle" size={30}></Icon>
+            </TouchableOpacity>
           </View>
         </View>
         

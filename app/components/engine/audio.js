@@ -5,28 +5,22 @@ import TrackPlayer, {AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents
 import {playingData, updatePlayerStats, saveNowPlaying, playRadio} from '../../redux/store'
 import API from './api'
 
-async function ClearPlayer() {
-    await TrackPlayer.reset();
-}
-
-export default function AudioPlayer() {
+export default function AudioService() {
     const radioPlaying = useSelector(state => state.radioPlaying);
     const img = radioPlaying.artwork
     const title = radioPlaying.title
+    const id = radioPlaying.id
 
-    const cmd = useSelector(state => state.audioCmd);
     const api = useSelector(state => state.infoFromAPI);
     const reqId = useSelector(state => state.currentRadioId)
     const lib = useSelector(state => state.radioLibrary)
 
     const [isSetup, setSetup] = useState(false)
     const dispatch = useDispatch();
-
     // Calls Player every ID change
     useEffect(() => {
         if(reqId > 0 && isSetup) {
-            Player()
-            dispatch(updatePlayerStats('playing'))
+            Player(reqId)
         } else if (reqId == 0 && !isSetup) {
             PlayerInit()
         }
@@ -44,49 +38,30 @@ export default function AudioPlayer() {
         await TrackPlayer.updateOptions({
             android: {
                 appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-                capabilities: [
-                    Capability.Play,
-                    Capability.Pause,
-                    Capability.SkipToNext,
-                    Capability.SkipToPrevious,
-                    Capability.Stop,
-                  ],
-                  compactCapabilities: [
-                    Capability.Play,
-                    Capability.Pause,
-                    Capability.SkipToNext,
-                    Capability.SkipToPrevious,
-                  ],
-                  notificationCapabilities: [
-                    Capability.Play,
-                    Capability.Pause,
-                    Capability.SkipToNext,
-                    Capability.SkipToPrevious,
-                  ],
             },
+            capabilities: [
+                Capability.Play,
+                Capability.Pause,
+                Capability.SkipToNext,
+                Capability.SkipToPrevious,
+                Capability.Stop,
+              ],
+              compactCapabilities: [
+                Capability.Play,
+                Capability.Pause,
+                Capability.SkipToNext,
+                Capability.SkipToPrevious,
+              ],
+              notificationCapabilities: [
+                Capability.Play,
+                Capability.Pause,
+                Capability.SkipToNext,
+                Capability.SkipToPrevious,
+              ],
         });
-
-        // TrackPlayer.updateOptions({
-        //     capabilities: [
-        //       TrackPlayer.CAPABILITY_PLAY,
-        //       TrackPlayer.CAPABILITY_PAUSE,
-        //       TrackPlayer.CAPABILITY_STOP,
-        //       TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        //       TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS
-        //     ],
-        //     compactCapabilities: [
-        //       TrackPlayer.CAPABILITY_PLAY,
-        //       TrackPlayer.CAPABILITY_PAUSE,
-        //       TrackPlayer.CAPABILITY_STOP,
-        //       TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        //       TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS
-        //     ]
-        //   });
-
     }
     // Initialize queue for player
     async function PlayerQueueInit(lib) {
-        setSetup(true)
         let localArray = []
         await lib.forEach(item => {
             localArray.push({
@@ -99,59 +74,52 @@ export default function AudioPlayer() {
             })
           });
         await TrackPlayer.add(localArray)
+        setSetup(true)
+        
     }
     // Run everytime user request a radio
-    async function Player() {
-        TrackPlayer.skip(reqId - 1)
+    async function Player(rID) {
+        TrackPlayer.skip(rID - 1)
         TrackPlayer.play()
-        const activeTrack = await TrackPlayer.getTrack(reqId - 1)
+        const activeTrack = await TrackPlayer.getTrack(rID - 1)
         dispatch(playRadio(activeTrack))
-    } 
-
-    // Calls AudioController every Remote Command received
-    useEffect(() => {
-        AudioController(cmd)
-        dispatch(updatePlayerStats(cmd))
-    }, [cmd])
-
-    async function AudioController(cmd) {
-        if(cmd == 'pause') {
-            await TrackPlayer.pause()
-        } else if (cmd == 'play') {
-            await TrackPlayer.play()
-            dispatch(updatePlayerStats('playing'))
-        }
     }
-
+  
     // Player Events
     const [playerState, setPlayerState] = useState('')
     const events = [
         Event.PlaybackState,
         Event.PlaybackError,
+        Event.PlaybackActiveTrackChanged
     ];
     useTrackPlayerEvents(events, (event) => {
         if (event.type === Event.PlaybackError) {
             ToastAndroid.show('An error occured while playing '+title, ToastAndroid.SHORT);
-            ClearPlayer()
+            // ClearPlayer()
             dispatch(playRadio([]))
         }
         if (event.type === Event.PlaybackState) {
             setPlayerState(event.state);
+            dispatch(updatePlayerStats(event.state))
+        }
+        if (event.type === Event.PlaybackActiveTrackChanged) {
+            dispatch(playRadio(event.track)) 
         }
         if (event.type === Event.MetadataCommonReceived) {
             console.log(Event.MetadataCommonReceived)
         }
-        });  
+    });  
 
     // Function on every player event change
     useEffect(() => {
-        dispatch(updatePlayerStats(playerState))
-        const timer = setInterval(async () => {
-            dispatch(playingData(await API(reqId)))
-        }, 12500)
+        if(playerState === 'playing' && id) {
+            const timer = setInterval(async () => {
+                dispatch(playingData(await API(id)))
+            }, 12500)
 
-        return () => clearInterval(timer)
-    }, [playerState]) 
+            return () => clearInterval(timer)
+        }
+    }, [radioPlaying]) 
 
     // Function on API Changes
     const [nowPlayingHistory, setNowPlayingHistory] = useState([]);
@@ -167,7 +135,7 @@ export default function AudioPlayer() {
             dispatch(saveNowPlaying(nowPlayingHistory))
         }
         // Update Metadata on Notification
-        if(api.title) {
+        if(api.title && playerState === 'playing') {
             const radioTrack = {
                 title: api.title,
                 artist: title,

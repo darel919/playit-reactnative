@@ -17,3 +17,21 @@ export default async function API(id) {
     }
     return FormattedData;
 }
+
+export async function API_Background(id) {   
+    let FormattedData = [];
+    const player = State.Playing
+    if(id && player === 'playing') {
+                
+        await fetch(API_ENDPOINT+'?playing_on='+id, {method: "POST",})
+        .then((r) => r.json())
+        .then((data) => {
+            FormattedData = {
+                title: data.songTitle,
+                artist: data.songArtist,
+                artwork: data.albumArt,
+            }
+        })
+    }
+    return FormattedData;
+}
