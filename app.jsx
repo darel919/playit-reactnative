@@ -15,6 +15,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Pages
+import Splash from './app/screens/splash'
 import Home from './app/screens/home'
 import Loading from './app/screens/loading'
 import NowPlaying from './app/screens/nowPlaying'
@@ -83,6 +84,7 @@ function AppStack() {
     
   return (
     <Stack.Navigator>
+      <Stack.Screen name="SplashScreen" component={Splash} options={{ headerShown: false  }}/>
       <Stack.Screen name="HomeScreen" component={HomeTabs} options={{ headerShown: false  }}/>
       <Stack.Screen name="LoadScreen" component={Loading} options={{ headerShown: false  }}/>
       <Stack.Screen name="NowPlayingScreen" component={NowPlaying} options={{headerTransparent: true, title: ''}}/>

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import { View, Pressable } from 'react-native'
 import {useSelector} from 'react-redux'
 import Playlist from '../components/playlist'
@@ -16,17 +16,10 @@ export default function HomeScreen({navigation}) {
   const playingId = radioPlayingState.id
   const playerState = useSelector(state => state.playerStatus);
   const radioLib = useSelector(state=>state.radioLibrary)
-  
-  // useEffect(() => {
-  //     if(radioLib.length === 0) {
-  //       navigation.navigate("LoadScreen")
-  //     } else {
-  //       navigation.navigate("HomeScreen")
-  //     }
-  // }, [radioLib]) 
-  
+    
   return (
     <View style={theme === 'dark' ? stylesTheme().userDark : stylesTheme().userWhite}>
+
       <Playlist/>
       <UserTheme/>
       {playerState === 'playing' ? <AudioElapsed/> : null}

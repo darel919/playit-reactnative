@@ -1,34 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import {requestId, fetchedRadioLibrary} from '../redux/store'
-import {API_ENDPOINT} from "@env"
+import {requestId} from '../redux/store'
 import {stylesTheme} from './styling/userScheme'
 import Loading from '../screens/loading'
+import { fetchedRadioLibrary } from '../redux/store';
+import {API_ENDPOINT} from "@env"
+
+export function PlaylistFetcher() {
+
+  const dispatch = useDispatch()
+  
+    useEffect(() => {
+  
+      fetch(API_ENDPOINT)
+      .then((r) => r.json())
+      .then((data) => {
+        dispatch(fetchedRadioLibrary(data))
+      }
+      
+      )}, [])
+}
 
 export default function Playlist() {
   const [isLoading, setIsLoading] = useState(true)
   const theme = useSelector(state => state.mode);
+  const data = useSelector(state=>state.radioLibrary)
   useEffect(() => {
-
-    fetch(API_ENDPOINT)
-    .then((r) => r.json())
-    .then((data) => {
-      dispatch(fetchedRadioLibrary(data))
+    if(data.length > 0) {
       setIsLoading(false)
+    } else {
+      setIsLoading(true)
     }
-    
-    )}, [])
+  }, [data])
 
   const dispatch = useDispatch();
   
   function pressHandler(item) {
     dispatch(requestId(item.id))
   }
-  const data = useSelector(state=>state.radioLibrary)
+  
     return (
         <SafeAreaView style={styles.home}>
-            {isLoading && data.length === 0 ? 
+            {isLoading ? 
             <Loading/>
             :
             <FlatList 

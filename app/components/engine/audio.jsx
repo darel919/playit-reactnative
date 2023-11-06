@@ -112,6 +112,12 @@ export default function AudioService() {
 
     // Function on every player event change
     useEffect(() => {
+        const instant = setInterval(async () => {
+            if(playerState === 'playing' && id) {
+                dispatch(playingData(await API(id)))
+                clearInterval(instant)
+            }
+        }, 1000)
         const timer = setInterval(async () => {
             if(playerState === 'playing' && id) {
                 dispatch(playingData(await API(id)))

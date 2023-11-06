@@ -71,14 +71,12 @@ export const reducer = (state = initData, action) => {
     switch(action.type) {
         case CHANGE_URL:
             state.infoFromAPI = []
-            // console.log(action.data)
             return {...state, radioPlaying: action.data}
         case FETCHED_LIBRARY: 
             return {...state, radioLibrary: action.data}
         case REQUEST_ID: 
             return {...state, currentRadioId: action.data}
         case PLAYER_STATUS:
-            // console.log(action.data)
             return {...state, playerStatus: action.data}
         case UPDATE_ELAPSED:
             return {...state, playerElapsed: action.data}
