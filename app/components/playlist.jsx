@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Image, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
 import {requestId, fetchedRadioLibrary} from '../redux/store'
 import {API_ENDPOINT} from "@env"
-import {stylesTheme} from '../components/styling/userScheme'
+import {stylesTheme} from './styling/userScheme'
+import Loading from '../screens/loading'
 
 export default function Playlist() {
-  const [data, setData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const theme = useSelector(state => state.mode);
   useEffect(() => {
@@ -14,21 +14,22 @@ export default function Playlist() {
     fetch(API_ENDPOINT)
     .then((r) => r.json())
     .then((data) => {
-      setData(data)
-      setIsLoading(false)
       dispatch(fetchedRadioLibrary(data))
+      setIsLoading(false)
     }
-    )}, []) 
+    
+    )}, [])
+
   const dispatch = useDispatch();
   
   function pressHandler(item) {
     dispatch(requestId(item.id))
   }
-
+  const data = useSelector(state=>state.radioLibrary)
     return (
         <SafeAreaView style={styles.home}>
-            {isLoading ? 
-            <ActivityIndicator size="large" style={styles.loading}></ActivityIndicator>
+            {isLoading && data.length === 0 ? 
+            <Loading/>
             :
             <FlatList 
             data={data}
@@ -42,7 +43,8 @@ export default function Playlist() {
                   </TouchableOpacity>
                 </View>
               )}
-            />}
+            />
+            }
         </SafeAreaView>
     )
 }

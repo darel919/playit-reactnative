@@ -16,7 +16,7 @@ export default function NowPlaying({navigation}) {
   const theme = useSelector(state => state.mode);
   const dispatch = useDispatch();
 
-  function pressHandler(func: String) {
+  function pressHandler(func) {
     dispatch(remoteCmd(func))
   }
 

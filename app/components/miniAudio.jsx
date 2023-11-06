@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import {useSelector} from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons';
-import {stylesTheme} from '../components/styling/userScheme'
+import {stylesTheme} from './styling/userScheme'
 
 export default function MiniAudio() {
     const img = useSelector(state=> state.radioPlaying.artwork);

@@ -1,21 +1,30 @@
-import React from 'react'
-import { View, TouchableOpacity, Pressable, StyleSheet } from 'react-native'
+import React, {useEffect} from 'react'
+import { View, Pressable } from 'react-native'
 import {useSelector} from 'react-redux'
 import Playlist from '../components/playlist'
 
 import MiniAudio from '../components/miniAudio'
-import Audio from '../components/engine/audio'
-import RemoteProcessor from '../components/engine/audioRemoteProcessor'
 import AudioElapsed from '../components/engine/audioElapsed'
 
 import {stylesTheme} from '../components/styling/userScheme'
 import UserTheme from '../components/styling/userTheme'
 
 export default function HomeScreen({navigation}) {
+
   const theme = useSelector(state => state.mode);
   const radioPlayingState = useSelector(state=> state.radioPlaying);
   const playingId = radioPlayingState.id
   const playerState = useSelector(state => state.playerStatus);
+  const radioLib = useSelector(state=>state.radioLibrary)
+  
+  // useEffect(() => {
+  //     if(radioLib.length === 0) {
+  //       navigation.navigate("LoadScreen")
+  //     } else {
+  //       navigation.navigate("HomeScreen")
+  //     }
+  // }, [radioLib]) 
+  
   return (
     <View style={theme === 'dark' ? stylesTheme().userDark : stylesTheme().userWhite}>
       <Playlist/>
