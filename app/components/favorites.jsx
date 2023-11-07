@@ -1,32 +1,32 @@
 import { useEffect, useState, useCallback } from 'react'
 import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native'
 import { getDBConnection, getDbItems, unfavoriteDb } from '../components/db-service'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {stylesTheme} from './styling/userScheme'
+
 export default function FavoriteComponent() {
     const [dbData, setDbData] = useState([])
     const theme = useSelector(state => state.mode);
 
+    const loadDataCallback = useCallback(async () => {
+        try {
+            const db = await getDBConnection();
+            setDbData(await getDbItems(db))
+        }
+        catch {
 
-const loadDataCallback = useCallback(async () => {
-    try {
-        const db = await getDBConnection();
-        setDbData(await getDbItems(db))
+        }
+    }) 
+
+    useEffect(() => {
+        loadDataCallback()
+    }, [loadDataCallback])
+
+    async function pressHandler(item) {
+        // const db = await getDBConnection();
+        // unfavoriteDb(db, item.id)
+        dispatch(requestId(item.id))
     }
-    catch {
-
-    }
-}) 
-
-useEffect(() => {
-    loadDataCallback()
-}, [loadDataCallback])
-
-async function pressHandler(item) {
-    // console.log(item)
-    const db = await getDBConnection();
-    unfavoriteDb(db, item.id)
-}
 
     return (
         <View>

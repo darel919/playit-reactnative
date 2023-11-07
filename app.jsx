@@ -1,18 +1,17 @@
 // Imported components
-import {useColorScheme, StyleSheet} from 'react-native';
 import * as React from 'react';
+import {useColorScheme, StyleSheet} from 'react-native';
 import { NavigationContainer, DefaultTheme, DarkTheme, } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {SafeAreaProvider, useSafeAreaInsets} from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Provider } from 'react-redux'
 import storeState from './app/redux/store'
-import { Provider, useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons';
+
+// Components
 import RemoteProcess from './app/components/engine/audioRemoteProcessor'
 import Audio from './app/components/engine/audio'
-
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 // Pages
 import Splash from './app/screens/splash'
@@ -23,6 +22,10 @@ import NowPlaying from './app/screens/nowPlaying'
 import Search from './app/screens/search'
 import PlaybackHistory from './app/screens/playbackHistory';
 
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// Tabs
 function HomeTabs() {
   const insets = useSafeAreaInsets();
   function tabByUser() {
@@ -74,18 +77,17 @@ function HomeTabs() {
         tabBarItemStyle: tabByUser()
       })}>
         
-
         <Tab.Screen name="Home" component={Home} options={({headerLargeTitle: true, headerTransparent: true})}/>
         <Tab.Screen name="Favorites" component={Favorites} options={{ title: 'Favorites'  }}/> 
         <Tab.Screen name="Search" component={Search} options={{ title: 'Search'  }}/> 
       
-          
     </Tab.Navigator>    
   )
   
 }
+
+// Navigation Stacks
 function AppStack() {
-    
   return (
     <Stack.Navigator>
       <Stack.Screen name="SplashScreen" component={Splash} options={{ headerShown: false  }}/>
@@ -96,6 +98,7 @@ function AppStack() {
     </Stack.Navigator>
   )
 }
+
 // RoutedApp
 export function App() {
   

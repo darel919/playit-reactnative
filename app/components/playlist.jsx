@@ -8,17 +8,14 @@ import { fetchedRadioLibrary } from '../redux/store';
 import {API_ENDPOINT} from "@env"
 
 export function PlaylistFetcher() {
-
   const dispatch = useDispatch()
   
     useEffect(() => {
-  
       fetch(API_ENDPOINT)
       .then((r) => r.json())
       .then((data) => {
         dispatch(fetchedRadioLibrary(data))
       }
-      
       )}, [])
 }
 

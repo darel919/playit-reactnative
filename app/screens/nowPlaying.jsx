@@ -1,10 +1,10 @@
-import React, {useEffect, useCallback, useState} from 'react'
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity, ToastAndroid } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import {remoteCmd} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
 import {stylesTheme} from '../components/styling/userScheme'
-import { getDBConnection, getDbItems, setFavoriteToDb, favCheck, unfavoriteDb } from '../components/db-service'
+import { getDBConnection, setFavoriteToDb, favCheck, unfavoriteDb } from '../components/db-service'
 
 export default function NowPlaying({navigation}) {
 
@@ -24,28 +24,23 @@ export default function NowPlaying({navigation}) {
     dispatch(remoteCmd(func))
   }
 
-  const loadDataCallback = useCallback(async () => {
-  try {
-    const db = await getDBConnection();
-    const fCheck = await favCheck(db, id)
-    if(fCheck === id) {
-      setIsFavorite(true)
-    } else {
-      setIsFavorite(false)
-    }
-  }
-  catch {
-    
-  }
-  }) 
-
   useEffect(() => {
-      loadDataCallback()
-  }, [loadDataCallback])
+    setIsFavorite(false)
+    getFav()
+}, [id])
 
-  //   useEffect(() => {
-  //     loadDataCallback()
-  // }, [])
+  const getFav = async () => {
+      try {
+        const db = await getDBConnection();
+        const fCheck = await favCheck(db, id)
+        if(fCheck === id) {
+          setIsFavorite(true)
+        }
+      }
+      catch {
+        setIsFavorite(false)
+      }
+  }
 
   const saveFav = async () => {
     try {
@@ -55,11 +50,13 @@ export default function NowPlaying({navigation}) {
       }
       const db = await getDBConnection();
       await setFavoriteToDb(db, item);
+      setIsFavorite(true)
       ToastAndroid.show(radio+ ' added to Favorites', ToastAndroid.SHORT);
+      
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   const unFav = async () => {
     try {

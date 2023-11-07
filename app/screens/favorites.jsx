@@ -4,6 +4,7 @@ import { getDBConnection, getDbItems, unfavoriteDb } from '../components/db-serv
 import {useDispatch, useSelector} from 'react-redux'
 import {stylesTheme} from '../components/styling/userScheme'
 import MiniAudio from '../components/miniAudio'
+import {requestId} from '../redux/store'
 
 export default function FavoriteScreen({navigation}) {
     const [dbData, setDbData] = useState([])
@@ -19,14 +20,14 @@ const loadDataCallback = useCallback(async () => {
     }
 }) 
 
+const dispatch = useDispatch()
+
 useEffect(() => {
     loadDataCallback()
 }, [loadDataCallback])
 
 async function pressHandler(item) {
-    // console.log(item)
-    const db = await getDBConnection();
-    unfavoriteDb(db, item.id)
+    dispatch(requestId(item.id))
 }
 
 const playingId = useSelector(state=> state.radioPlaying.id);

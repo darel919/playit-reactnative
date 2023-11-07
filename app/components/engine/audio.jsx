@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import {ToastAndroid} from 'react-native'
 import {useDispatch, useSelector} from 'react-redux'
-import TrackPlayer, {AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event, RepeatMode } from 'react-native-track-player';
+import TrackPlayer, {AppKilledPlaybackBehavior, Capability, useTrackPlayerEvents, Event } from 'react-native-track-player';
 import {playingData, updatePlayerStats, saveNowPlaying, playRadio} from '../../redux/store'
 import API from './api'
 
 export default function AudioService() {
     const radioPlaying = useSelector(state => state.radioPlaying);
-    const img = radioPlaying.artwork
-    const title = radioPlaying.title
-    const id = radioPlaying.id
-
     const api = useSelector(state => state.infoFromAPI);
     const reqId = useSelector(state => state.currentRadioId)
     const lib = useSelector(state => state.radioLibrary)
 
+    const img = radioPlaying.artwork
+    const title = radioPlaying.title
+    const id = radioPlaying.id
+
     const [isSetup, setSetup] = useState(false)
     const dispatch = useDispatch();
+
     // Calls Player every ID change
     useEffect(() => {
         if(reqId > 0 && isSetup) {
@@ -25,12 +26,6 @@ export default function AudioService() {
             PlayerInit()
         }
     }, [reqId]) 
-
-    useEffect(() => {
-        if(lib.length > 0) {
-            PlayerQueueInit(lib)
-        }
-    }, [lib]) 
 
     // Initialize player for first start
     async function PlayerInit() {
@@ -45,22 +40,31 @@ export default function AudioService() {
                 Capability.SkipToNext,
                 Capability.SkipToPrevious,
                 Capability.Stop,
+                Capability.SetRating
               ],
               compactCapabilities: [
                 Capability.Play,
                 Capability.Pause,
                 Capability.SkipToNext,
                 Capability.SkipToPrevious,
+                Capability.SetRating
               ],
               notificationCapabilities: [
                 Capability.Play,
                 Capability.Pause,
                 Capability.SkipToNext,
                 Capability.SkipToPrevious,
+                Capability.SetRating
               ],
         });
     }
-    // Initialize queue for player
+
+    // Initialize Queue to Player after Initial Fetching done
+    useEffect(() => {
+        if(lib.length > 0) {
+            PlayerQueueInit(lib)
+        }
+    }, [lib]) 
     async function PlayerQueueInit(lib) {
         let localArray = []
         await lib.forEach(item => {
@@ -75,9 +79,9 @@ export default function AudioService() {
           });
         await TrackPlayer.add(localArray)
         await TrackPlayer.setRepeatMode(2)
-        setSetup(true)
-               
+        setSetup(true)          
     }
+
     // Run everytime user request a radio
     async function Player(rID) {
         TrackPlayer.skip(rID - 1)
@@ -104,9 +108,7 @@ export default function AudioService() {
         }
         if (event.type === Event.PlaybackActiveTrackChanged) {
             dispatch(playRadio(event.track)) 
-        }
-        if (event.type === Event.MetadataCommonReceived) {
-            // console.log(Event.MetadataCommonReceived)
+            dispatch(playingData([]))
         }
     });  
 
@@ -149,5 +151,6 @@ export default function AudioService() {
             TrackPlayer.updateNowPlayingMetadata(radioTrack)
         }
     }, [api.title])
+
     return null
 }

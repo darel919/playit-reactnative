@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import {API_ENDPOINT} from '@env'
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, FlatList, Pressable } from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux'
 import {requestId} from '../redux/store'
-import Icon from 'react-native-vector-icons/Ionicons';
-import MiniAudio from '../components/miniAudio'
-import {API_ENDPOINT} from '@env'
 import {stylesTheme} from '../components/styling/userScheme'
+import MiniAudio from '../components/miniAudio'
 
 export default function Search({navigation}) {
     const theme = useSelector(state => state.mode);

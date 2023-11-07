@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux'
-import TrackPlayer, {} from 'react-native-track-player';
+import TrackPlayer, {RatingType} from 'react-native-track-player';
 import { remoteCmd } from '../../redux/store'; 
 
 export async function remoteFunction() {
