@@ -1,23 +1,76 @@
-import React, {useEffect} from 'react'
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import React, {useEffect, useCallback, useState} from 'react'
+import { View, Text, Image, StyleSheet, Button, TouchableOpacity, ToastAndroid } from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import {remoteCmd} from '../redux/store'
 import Icon from 'react-native-vector-icons/Ionicons';
 import {stylesTheme} from '../components/styling/userScheme'
+import { getDBConnection, getDbItems, setFavoriteToDb, favCheck, unfavoriteDb } from '../components/db-service'
 
 export default function NowPlaying({navigation}) {
 
   const AlbumArt = useSelector(state=> state.infoFromAPI.img);
   const radioArt = useSelector(state=> state.radioPlaying.artwork);
   const radio = useSelector(state=> state.radioPlaying.title);
+  const id = useSelector (state=>state.radioPlaying.id);
   const title = useSelector(state=> state.infoFromAPI.title) ;
   const elapsed = useSelector(state => state.playerElapsed);
   const playerStatus = useSelector (state=>state.playerStatus);
   const theme = useSelector(state => state.mode);
   const dispatch = useDispatch();
 
+  const [isFavorite, setIsFavorite] = useState(false)
+
   function pressHandler(func) {
     dispatch(remoteCmd(func))
+  }
+
+  const loadDataCallback = useCallback(async () => {
+  try {
+    const db = await getDBConnection();
+    const fCheck = await favCheck(db, id)
+    if(fCheck === id) {
+      setIsFavorite(true)
+    } else {
+      setIsFavorite(false)
+    }
+  }
+  catch {
+    
+  }
+  }) 
+
+  useEffect(() => {
+      loadDataCallback()
+  }, [loadDataCallback])
+
+  //   useEffect(() => {
+  //     loadDataCallback()
+  // }, [])
+
+  const saveFav = async () => {
+    try {
+      const item = {
+        id: id,
+        title: radio
+      }
+      const db = await getDBConnection();
+      await setFavoriteToDb(db, item);
+      ToastAndroid.show(radio+ ' added to Favorites', ToastAndroid.SHORT);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const unFav = async () => {
+    try {
+      const db = await getDBConnection();
+      await unfavoriteDb(db, id)
+      setIsFavorite(false)
+      ToastAndroid.show(radio+ ' removed from Favorites', ToastAndroid.SHORT);
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(()=> {
@@ -80,9 +133,18 @@ export default function NowPlaying({navigation}) {
             <TouchableOpacity onPress={() => pressHandler('next')}>
               <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="play-skip-forward-outline" size={30}></Icon>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => pressHandler('shuffle')}>
-              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="shuffle" size={30}></Icon>
+
+            {isFavorite ?
+            <TouchableOpacity onPress={() => unFav()}>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="star" size={30}></Icon>
             </TouchableOpacity>
+            : 
+            <TouchableOpacity onPress={() => saveFav()}>
+              <Icon style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark} name="star-outline" size={30}></Icon>
+            </TouchableOpacity>
+            }
+
+            
           </View>
         </View>
         

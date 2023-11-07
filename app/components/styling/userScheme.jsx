@@ -20,6 +20,6 @@ export const stylesTheme = () => StyleSheet.create({
       backgroundColor: '#222',
     },
     inputTextDark: {
-      backgroundColor: '#999',
+      backgroundColor: '#ddd',
     },
 })

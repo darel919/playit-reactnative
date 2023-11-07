@@ -27,12 +27,16 @@ export default function Search({navigation}) {
       dispatch(requestId(item.id))
     }
 
+    const textWhitePlaceholder = stylesTheme().textWhite.color
+    const textDarkPlaceholder = stylesTheme().textDark.color
+
     return (
         <View style={styles.parentView}>
             <View style={[styles.textInput, theme === 'dark' ? stylesTheme().taskbarDark : stylesTheme().inputTextDark]}>
-              <Icon name="search" size={20}/>
+              <Icon name="search" size={20}  style={theme === 'dark' ? stylesTheme().textWhite : stylesTheme().textDark}/>
               <TextInput
               placeholder="Search for Radios"
+              placeholderTextColor={theme === 'dark' ? textWhitePlaceholder : textDarkPlaceholder}
               autoFocus
               onChangeText={text => setText(text)}
               value={text}
@@ -105,18 +109,4 @@ const styles = StyleSheet.create({
         margin: 15,
         objectFit: 'contain'
     },
-    mAudio: {
-      margin: 10,
-      bottom: 0,
-      left:0,
-      right:0,
-      position: 'absolute',
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'lightgray',
-      width: '95%',
-      padding: 7,
-      borderRadius: 10
-    }
   });

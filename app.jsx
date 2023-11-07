@@ -17,6 +17,7 @@ const Tab = createBottomTabNavigator();
 // Pages
 import Splash from './app/screens/splash'
 import Home from './app/screens/home'
+import Favorites from './app/screens/favorites'
 import Loading from './app/screens/loading'
 import NowPlaying from './app/screens/nowPlaying'
 import Search from './app/screens/search'
@@ -59,6 +60,8 @@ function HomeTabs() {
           let icons;
           if (route.name === "Home") {
             icons = focused ? 'home' : 'home-outline';
+          } else if (route.name === "Favorites") {
+            icons = focused ? 'star' : 'star-sharp';
           } else if (route.name === "Search") {
             icons = focused ? 'search' : 'search-sharp';
           }
@@ -73,6 +76,7 @@ function HomeTabs() {
         
 
         <Tab.Screen name="Home" component={Home} options={({headerLargeTitle: true, headerTransparent: true})}/>
+        <Tab.Screen name="Favorites" component={Favorites} options={{ title: 'Favorites'  }}/> 
         <Tab.Screen name="Search" component={Search} options={{ title: 'Search'  }}/> 
       
           
